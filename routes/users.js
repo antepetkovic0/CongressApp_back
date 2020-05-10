@@ -1,12 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const dbHelp = require('../db');
-const router = express.Router();
-router.use(cors());
 
-process.env.SECRET_KEY = 'secret';
+const router = express.Router();
+const secret = process.env.SECRET_KEY || 'secret';
+router.use(cors());
 
 router.get('/', (req, res) => {
   res.send('USERS...');
@@ -78,7 +78,7 @@ router.post('/login', async (req, res) => {
               email: user[0].email
             };
 
-            const token = jwt.sign(payload, process.env.SECRET_KEY, {
+            const token = jwt.sign(payload, secret, {
               expiresIn: '1h'
             });
             res.send({ token });
@@ -105,7 +105,7 @@ function checkToken(req, res, next) {
     const token = bearer[1];
 
     //verify token
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+    jwt.verify(token, secret, (err, decoded) => {
       if (err) {
         return res.send({ status: 'Failed to authenticate token.' });
       } else {
@@ -189,18 +189,6 @@ router.get('/timeline/:email', async (req, res) => {
       return filtered;
     });
     res.json(arr);
-  } catch (err) {
-    res.send(err);
-  }
-});
-
-router.get('/timeline/lecturesIds/:email', async (req, res) => {
-  const db = dbHelp.getDB();
-  const collection = db.collection('users');
-
-  const mail = req.params.email;
-
-  try {
   } catch (err) {
     res.send(err);
   }

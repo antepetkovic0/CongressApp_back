@@ -1,10 +1,12 @@
 const mongoClient = require('mongodb').MongoClient;
 
+const url = process.env.MONGO_URI || 'mongodb://localhost:27017';
+
 let db;
 
 const connectDB = callback => {
   mongoClient.connect(
-    'mongodb://localhost:27017',
+    url,
     { useNewUrlParser: true, useUnifiedTopology: true },
     (err, client) => {
       db = client.db('conference');

@@ -1,3 +1,3 @@
-Web server made with Node(Express).
+Web server made with Node(Express) :> deployed onto Heroku.
 
-Making requests to MongoDB.
+Database => MongoDB :> migrated to MongoDB Atlas.
